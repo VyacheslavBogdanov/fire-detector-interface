@@ -7,16 +7,16 @@
 			<DetectionResultComponent :result="result" />
 		</div>
 		<button>Обнаружить огонь</button>
-		<Informer />
+		<!-- <Informer /> -->
 	</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Info from '@/components/HeaderComponent/Info.vue';
+import Info from '@/components/Info/Info.vue';
 import FileUploaderComponent from '@/components/FileUploaderComponent/FileUploaderComponent.vue';
 import DetectionResultComponent from '@/components/DetectionResultComponent/DetectionResultComponent.vue';
-import Informer from '@/components/Informer/Informer.vue';
+// import Informer from '@/components/Informer/Informer.vue';
 
 const result = ref<null | { type: string }>(null);
 
