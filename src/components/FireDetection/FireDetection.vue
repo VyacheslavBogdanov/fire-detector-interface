@@ -1,8 +1,13 @@
 <template>
 	<div class="middle-elements">
-		<FileUpload @fileSelected="updateImage" />
-		<FireDetectionBtn @sendRequest="sendRequest" />
+		<FileUpload @fileSelected="updateImage" :isDetectorActive="isDetectorActive" />
+
+		<FireDetectionBtn @sendRequest="sendRequest" :disabled="!isDetectorActive" />
 	</div>
+	<div v-if="imageBase64" class="image-preview">
+		<img :src="imageBase64" alt="Предпросмотр изображения" class="image-preview__img" />
+	</div>
+
 	<div :class="['result', resultClass]">
 		<div class="result__icon">ⓘ</div>
 		<span>{{ message }}</span>
@@ -18,6 +23,7 @@ import type { MessageType } from '../utils/types';
 
 const props = defineProps<{
 	messageTypes: MessageType[];
+	isDetectorActive: boolean;
 }>();
 
 const result = ref<{ type: string } | null>(null);
@@ -105,6 +111,15 @@ const sendRequest = async () => {
 
 <style lang="scss" scoped>
 @import '../../styles/main.scss';
+.image-preview {
+	margin-top: 20px;
+	img {
+		max-width: 100%;
+		max-height: 300px;
+		border: 1px solid #ccc;
+		border-radius: $border-radius;
+	}
+}
 
 .middle-elements {
 	height: 50px;

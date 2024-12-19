@@ -12,12 +12,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useHealthCheck } from './useHealthCheck';
 import type { MessageType } from '../utils/types';
 
 const props = defineProps<{
 	messageTypes: MessageType[];
+	onStatusChange: (status: boolean) => void;
+}>();
+
+const emit = defineEmits<{
+	(event: 'onStatusChange', status: boolean): void;
 }>();
 
 const { status } = useHealthCheck();
@@ -27,6 +32,10 @@ const filteredMessageTypes = computed(() => {
 		return props.messageTypes.filter((type) => type.class === 'health--success');
 	}
 	return props.messageTypes.filter((type) => type.class === 'health--warning');
+});
+
+watch(status, (newStatus) => {
+	emit('onStatusChange', newStatus === 'active');
 });
 </script>
 

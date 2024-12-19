@@ -1,6 +1,20 @@
 <template>
-	<div :class="['upload', { 'upload--active': fileName }]" @dragover.prevent @drop.prevent>
-		<input class="upload__input" type="file" accept="image/*" @change="onFileChange" />
+	<div
+		:class="[
+			'upload',
+			{ 'upload--disabled': !isDetectorActive },
+			{ 'upload--active': fileName },
+		]"
+		@dragover.prevent
+		@drop.prevent
+	>
+		<input
+			class="upload__input"
+			type="file"
+			accept="image/*"
+			@change="onFileChange"
+			:disabled="!isDetectorActive"
+		/>
 		<span class="upload__text">
 			{{ fileName || 'Загрузить изображение...' }}
 		</span>
@@ -9,6 +23,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+
+const props = defineProps<{
+	isDetectorActive: boolean;
+}>();
 
 const emit = defineEmits<{
 	(event: 'fileSelected', base64: string): void;
@@ -44,7 +62,7 @@ const onFileChange = (event: Event) => {
 	justify-content: center;
 	align-items: center;
 	padding: 10px;
-	border: $border-width dashed #ccc;
+	border: $border-width dashed $color-mid-el;
 	border-radius: $border-radius;
 	background-color: $color-bg;
 	text-align: center;
@@ -63,6 +81,13 @@ const onFileChange = (event: Event) => {
 		border-color: $border-color;
 	}
 
+	&--disabled {
+		border-color: $color-mid-el-disabled;
+		&:hover {
+			border-color: $color-mid-el-disabled;
+		}
+	}
+
 	&__input {
 		opacity: 0;
 		position: absolute;
@@ -74,7 +99,7 @@ const onFileChange = (event: Event) => {
 	&__text {
 		font-size: 14px;
 		font-weight: 500;
-		color: #888;
+		color: #ccc;
 		pointer-events: none;
 		white-space: nowrap;
 		overflow: hidden;

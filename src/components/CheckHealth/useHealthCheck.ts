@@ -10,6 +10,7 @@ export function useHealthCheck() {
 
 			if (response.ok) {
 				const data = await response.json();
+				// const data = { result: 0 };
 				console.log(data);
 
 				if (data.result === 1) {

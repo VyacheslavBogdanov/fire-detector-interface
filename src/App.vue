@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<h1 class="title">Детектор огня</h1>
 	<div id="app">
 		<CheckHealth :messageTypes="messageTypes" />
@@ -21,6 +21,39 @@ const loadMessageTypes = async () => {
 	} catch (error) {
 		console.error('Ошибка загрузки:', error);
 	}
+};
+
+onMounted(loadMessageTypes);
+</script> -->
+
+<template>
+	<h1 class="title">Детектор огня</h1>
+	<div id="app">
+		<CheckHealth :messageTypes="messageTypes" :onStatusChange="updateStatus" />
+		<FireDetection :messageTypes="messageTypes" :isDetectorActive="isDetectorActive" />
+	</div>
+</template>
+
+<script setup lang="ts">
+import CheckHealth from '@/components/CheckHealth/CheckHealth.vue';
+import FireDetection from '@/components/FireDetection/FireDetection.vue';
+import { ref, onMounted } from 'vue';
+import { fetchData } from './components/mocks/db';
+import type { MessageType } from './components/utils/types.ts';
+
+const messageTypes = ref<MessageType[]>([]);
+const isDetectorActive = ref<boolean>(false);
+
+const loadMessageTypes = async () => {
+	try {
+		messageTypes.value = await fetchData('/message-types');
+	} catch (error) {
+		console.error('Ошибка загрузки:', error);
+	}
+};
+
+const updateStatus = (status: boolean) => {
+	isDetectorActive.value = status;
 };
 
 onMounted(loadMessageTypes);
