@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<div class="middle-elements">
 		<FileUpload @fileSelected="updateImage" :isDetectorActive="isDetectorActive" />
 
@@ -25,6 +25,8 @@ const props = defineProps<{
 	messageTypes: MessageType[];
 	isDetectorActive: boolean;
 }>();
+
+// console.log('isDetectorActive', props.isDetectorActive);
 
 const result = ref<{ type: string } | null>(null);
 const imageBase64 = ref<string | null>(null);
@@ -54,6 +56,8 @@ const updateImage = (base64: string) => {
 };
 
 const sendRequest = async () => {
+	console.log('КНОПКА');
+
 	if (!imageBase64.value) {
 		console.error('Изображение не выбрано');
 		return;
@@ -172,5 +176,52 @@ const sendRequest = async () => {
 		background-color: #e3e3ff;
 		color: $color-primary;
 	}
+}
+</style> -->
+
+<template>
+	<div>
+		<h2>Детектор огня</h2>
+		<p :class="resultClass">{{ message }}</p>
+		<FireDetectionBtn :disabled="!isDetectorActive" @onClick="sendRequest" />
+	</div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import FireDetectionBtn from './FireDetectionBtn.vue';
+import type { MessageType } from '../utils/types';
+
+const props = defineProps({
+	messageTypes: MessageType[];
+	isDetectorActive: Boolean,
+});
+
+const message = ref('');
+const resultClass = computed(() => {
+	const type = props.messageTypes.find((t) => t.class === 'prediction');
+	return type ? `result-${type.class}` : 'result-default';
+});
+
+const sendRequest = async () => {
+	try {
+		const response = await fetch('/api/predict');
+		if (!response.ok) throw new Error('Ошибка запроса');
+		const data = await response.json();
+		message.value = data.message || 'Огонь обнаружен!';
+	} catch (error) {
+		console.error(error);
+		message.value = 'Не удалось выполнить запрос';
+	}
+};
+</script>
+
+<style scoped>
+.result-default {
+	color: gray;
+}
+
+.result-prediction {
+	color: orange;
 }
 </style>

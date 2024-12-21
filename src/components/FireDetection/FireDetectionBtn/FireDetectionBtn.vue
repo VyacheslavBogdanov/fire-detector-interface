@@ -73,7 +73,6 @@ const emit = defineEmits<{
 		z-index: 3;
 		position: relative;
 		font-weight: 500;
-		color: $color-mid-el;
 	}
 }
 </style>

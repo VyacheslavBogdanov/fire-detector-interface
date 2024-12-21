@@ -2,7 +2,7 @@
 	<div
 		:class="[
 			'upload',
-			{ 'upload--disabled': !isDetectorActive },
+			{ 'upload--disabled': isDetectorActive },
 			{ 'upload--active': fileName },
 		]"
 		@dragover.prevent
@@ -13,7 +13,7 @@
 			type="file"
 			accept="image/*"
 			@change="onFileChange"
-			:disabled="!isDetectorActive"
+			:disabled="isDetectorActive"
 		/>
 		<span class="upload__text">
 			{{ fileName || 'Загрузить изображение...' }}
